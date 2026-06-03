@@ -84,11 +84,39 @@ services:
     networks:
       - warpgate
 
+  # ClickHouse — base analítica de CNPJ (dev do produto Prospec / prospec_etl)
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: clickhouse
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-cnpj}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-prospec_etl}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-clickhouse_dev}
+      TZ: America/Sao_Paulo
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    ports:
+      - "127.0.0.1:8123:8123"   # HTTP
+      - "127.0.0.1:9100:9000"   # nativo (9100 no host: 9000 é do minio)
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - warpgate
+
 volumes:
   postgres_data:
   valkey_data:
   minio_data:
   mailpit_data:
+  clickhouse_data:
 
 networks:
   warpgate:
