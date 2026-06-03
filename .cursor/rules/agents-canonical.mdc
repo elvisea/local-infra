@@ -1,0 +1,11 @@
+---
+description: Contexto canônico do local-infra
+alwaysApply: true
+---
+
+@AGENTS.md
+
+O contexto canônico do repo (produto, stack, ausência de alvo SSH, segurança dev-only,
+gitflow, gotchas, MCPs, tooling) vive em `AGENTS.md`. Para revisão de infra/segurança,
+ver também `docs/SECURITY.md` (threat model invertido) e o agente
+`.claude/agents/infra-reviewer.md`.
